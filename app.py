@@ -2,24 +2,39 @@ import streamlit as st
 import os
 from groq import Groq
 
-# Pokušaj učitati .env fajl SAMO ako postoji (za lokalno testiranje)
+# Učitaj .env samo lokalno
 try:
     from dotenv import load_dotenv
     load_dotenv()
 except:
     pass
 
-# Proveri da li API ključ postoji
-api_key = os.getenv("GROQ_API_KEY")
+# Barvno prilagođenje
+st.markdown("""
+<style>
+    .stButton>button {
+        background-color: #7b2cbf;
+        color: white;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        border: none;
+    }
+    .stButton>button:hover {
+        background-color: #9d4edd;
+    }
+    h1 {
+        color: #7b2cbf;
+    }
+</style>
+""", unsafe_allow_html=True)
 
+# Inicializacija
+api_key = os.getenv("GROQ_API_KEY")
 if not api_key:
-    st.error("❌ GROQ_API_KEY nije pronađen! Proveri .env fajl.")
+    st.error("❌ GROQ_API_KEY ni najden!")
     st.stop()
 
-# Inicializacija Groq klienta
 client = Groq(api_key=api_key)
-
-# Nastavi sa ostatkom koda...
 st.set_page_config(page_title="Skupaj Naprej Klepetalnik", page_icon="💬")
 
 # Specializacija chatbota
@@ -61,11 +76,9 @@ if prompt := st.chat_input("Postavite mi vprašanje o klubu..."):
     with st.chat_message("user"):
         st.markdown(prompt)
     
-    # API sporočila
     api_messages = [{"role": "system", "content": KLUB_TEMA}]
     api_messages.extend(st.session_state.messages)
     
-    # Generiraj odgovor
     with st.chat_message("assistant"):
         try:
             completion = client.chat.completions.create(
