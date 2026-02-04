@@ -94,6 +94,6 @@ if prompt := st.chat_input("Postavite mi vprašanje o klubu..."):
             st.error(f"Napaka: {str(e)}")
 
 # Gumb za reset
-if st.button("🔄 Začni nov pogovor"):
+if st.button(" Začni nov pogovor"):
     st.session_state.messages = []
     st.rerun()
